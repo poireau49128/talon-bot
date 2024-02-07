@@ -18,8 +18,11 @@ bot = telegram.Bot(token=bot_token)
 
 
 async def main():
-    loop = asyncio.get_running_loop()
-    await check_coupons()
+    while True:
+        await check_coupons()
+        print(1)
+        await asyncio.sleep(5)
+        
 
     
 async def check_coupons():
@@ -48,10 +51,9 @@ async def check_coupons():
         
                     message = f"Доступен талон\n{speciality}: {doctor_name}\nДата: {date}\nВремя: {talon_link}"
                     if(talon_link not in sent_talons):
-                        await bot.send_message(chat_id=chat_id, text=message, parse_mode=ParseMode.HTML)
+                        #await bot.send_message(chat_id=chat_id, text=message, parse_mode=ParseMode.HTML)
                         print(message)
                         sent_talons.add(talon_link)
-    await asyncio.sleep(10)
 
 
 asyncio.run(main())
