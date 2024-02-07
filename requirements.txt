@@ -1,0 +1,6 @@
+anyio==4.2.0
+beautifulsoup4==4.12.3
+bs4==0.0.2
+python-telegram-bot==20.7
+requests==2.31.0
+telegram==0.0.1
