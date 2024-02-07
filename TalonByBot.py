@@ -23,8 +23,7 @@ doctor_urls = [
     "https://talon.by/policlinic/grodno-sdp/order/31640/44826",
     "https://talon.by/policlinic/grodno-sdp/order/31640/37040",
     "https://talon.by/policlinic/grodno-sdp/order/31640/37023",
-    "https://talon.by/policlinic/grodno-sdp/order/31640/36999",
-    "https://talon.by/policlinic/grodno-sdp/order/8220/125526"
+    "https://talon.by/policlinic/grodno-sdp/order/31640/36999"
 ]
 
 # Инициализация бота
