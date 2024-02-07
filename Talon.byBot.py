@@ -20,7 +20,6 @@ bot = telegram.Bot(token=bot_token)
 async def main():
     while True:
         await check_coupons()
-        print(1)
         await asyncio.sleep(5)
         
 
