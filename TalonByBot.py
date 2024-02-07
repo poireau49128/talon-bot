@@ -6,11 +6,25 @@ from telegram.constants import ParseMode
 
 
 sent_talons = set()
-
+counter = 0
 
 bot_token = "6981505786:AAF574i3_XhvPmpy3KgJ_eWP7GGX2Wi63qY"
 chat_id = "898391631"
-doctor_urls = ["https://talon.by/policlinic/4gr/order/41028/103870"]
+doctor_urls = [
+    "https://talon.by/policlinic/grodno-sdp/order/8221/37060",
+    "https://talon.by/policlinic/grodno-sdp/order/8221/108309",
+    "https://talon.by/policlinic/grodno-sdp/order/8221/74849",
+    "https://talon.by/policlinic/grodno-sdp/order/8221/84527",
+    "https://talon.by/policlinic/grodno-sdp/order/31640/85039",
+    "https://talon.by/policlinic/grodno-sdp/order/31640/37000",
+    "https://talon.by/policlinic/grodno-sdp/order/31640/155391",
+    "https://talon.by/policlinic/grodno-sdp/order/31640/51624",
+    "https://talon.by/policlinic/grodno-sdp/order/31640/37053",
+    "https://talon.by/policlinic/grodno-sdp/order/31640/44826",
+    "https://talon.by/policlinic/grodno-sdp/order/31640/37040",
+    "https://talon.by/policlinic/grodno-sdp/order/31640/37023",
+    "https://talon.by/policlinic/grodno-sdp/order/31640/36999"
+]
 
 # Инициализация бота
 bot = telegram.Bot(token=bot_token)
@@ -20,6 +34,8 @@ bot = telegram.Bot(token=bot_token)
 async def main():
     while True:
         await check_coupons()
+        print(counter)
+        counter += 1
         await asyncio.sleep(5)
         
 
