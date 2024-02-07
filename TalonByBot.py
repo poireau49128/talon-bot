@@ -1,4 +1,5 @@
-import requests
+#import requests
+import aiohttp
 from bs4 import BeautifulSoup
 import telegram
 import asyncio
@@ -23,7 +24,8 @@ doctor_urls = [
     "https://talon.by/policlinic/grodno-sdp/order/31640/44826",
     "https://talon.by/policlinic/grodno-sdp/order/31640/37040",
     "https://talon.by/policlinic/grodno-sdp/order/31640/37023",
-    "https://talon.by/policlinic/grodno-sdp/order/31640/36999"
+    "https://talon.by/policlinic/grodno-sdp/order/31640/36999",
+    "https://talon.by/policlinic/grodno-sdp/order/8220/125526"
 ]
 
 # Инициализация бота
@@ -32,19 +34,23 @@ bot = telegram.Bot(token=bot_token)
 
 
 async def main():
-    while True:
-        global counter
-        print(f"Попытка найти талон №{counter}")
-        counter += 1
-        await check_coupons()
-        await asyncio.sleep(1)
+    async with aiohttp.ClientSession() as session:
+        while True:
+            global counter
+            print(f"Попытка найти талон №{counter}")
+            counter += 1
+            await check_coupons(session)
+            await asyncio.sleep(1)
         
 
     
-async def check_coupons():
+async def check_coupons(session):
     for doctor_url in doctor_urls:
-        response = requests.get(doctor_url)
-        soup = BeautifulSoup(response.content, "html.parser")
+        async with session.get(doctor_url) as response:
+            html_content = await response.text()
+        #response = requests.get(doctor_url)
+        #soup = BeautifulSoup(response.content, "html.parser")
+        soup = BeautifulSoup(html_content, "html.parser")
         calendar_div = soup.find("div", class_="calendar")
         if not calendar_div:
             continue
