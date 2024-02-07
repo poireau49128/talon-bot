@@ -1,4 +1,5 @@
 anyio==4.2.0
+aiohttp==3.9.3
 beautifulsoup4==4.12.3
 bs4==0.0.2
 python-telegram-bot==20.7
