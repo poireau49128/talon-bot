@@ -34,8 +34,6 @@ bot = telegram.Bot(token=bot_token)
 async def main():
     while True:
         await check_coupons()
-        print(counter)
-        counter += 1
         await asyncio.sleep(5)
         
 
@@ -45,6 +43,12 @@ async def check_coupons():
         response = requests.get(doctor_url)
         soup = BeautifulSoup(response.content, "html.parser")
         calendar_div = soup.find("div", class_="calendar")
+        if not calendar_div:
+            global counter
+            print(f"Попытка найти талон №{counter}")
+            counter += 1
+            break
+        
         talons_divs = calendar_div.find_all("div", class_="day_talons")
 
         if talons_divs:
