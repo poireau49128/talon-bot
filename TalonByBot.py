@@ -1,4 +1,3 @@
-#import requests
 import aiohttp
 from bs4 import BeautifulSoup
 import telegram
@@ -24,11 +23,9 @@ doctor_urls = [
     "https://talon.by/policlinic/grodno-sdp/order/31640/44826",
     "https://talon.by/policlinic/grodno-sdp/order/31640/37040",
     "https://talon.by/policlinic/grodno-sdp/order/31640/37023",
-    "https://talon.by/policlinic/grodno-sdp/order/31640/36999",
-    "https://talon.by/policlinic/grodno-sdp/order/8220/125526"
+    "https://talon.by/policlinic/grodno-sdp/order/31640/36999"
 ]
 
-# Инициализация бота
 bot = telegram.Bot(token=bot_token)
 
 
@@ -48,8 +45,6 @@ async def check_coupons(session):
     for doctor_url in doctor_urls:
         async with session.get(doctor_url) as response:
             html_content = await response.text()
-        #response = requests.get(doctor_url)
-        #soup = BeautifulSoup(response.content, "html.parser")
         soup = BeautifulSoup(html_content, "html.parser")
         calendar_div = soup.find("div", class_="calendar")
         if not calendar_div:
@@ -65,20 +60,29 @@ async def check_coupons(session):
                 talons = order_talons.find_all("a", class_="talon")
                 for talon in talons:
                     time = talon.text.strip()
-                    talon_link = talon["href"]
-                    talon_link = f'<a href="https://talon.by{talon_link}">{time}</a>'
-
-
                     talon_order = soup.find("ul", id="talon_order")
                     speciality = talon_order.find("a", title="Выбор специальности").find("span").text.strip()
                     doctor_name = talon_order.find("a", title="Выбор врача").find("span").text.strip()
 
-        
-                    message = f"Доступен талон\n{speciality}: {doctor_name}\nДата: {date}\nВремя: {talon_link}"
-                    if(talon_link not in sent_talons):
-                        await bot.send_message(chat_id=chat_id, text=message, parse_mode=ParseMode.HTML)
+                    if(talon.has_attr("title") and
+                           "сегодня" in talon['title'] and
+                           f"{doctor_name}.{date}.{time}" not in sent_talons):
+                        message = f"Доступен талон на сегодня\n{speciality}: {doctor_name}\nДата: {date}\nВремя: {time}"
+                        await bot.send_message(chat_id=chat_id, text=message)
                         print(message)
-                        sent_talons.add(talon_link)
+                        sent_talons.add(f"{doctor_name}.{date}.{time}")
+                    elif(talon.has_attr("title") and
+                           "сегодня" in talon['title'] and
+                           f"{doctor_name}.{date}.{time}" in sent_talons):
+                        continue
+                    else:
+                        talon_link = talon["href"]
+                        talon_link = f'<a href="https://talon.by{talon_link}">{time}</a>'
+                        message = f"Доступен талон\n{speciality}: {doctor_name}\nДата: {date}\nВремя: {talon_link}"
+                        if(talon_link not in sent_talons):
+                            await bot.send_message(chat_id=chat_id, text=message, parse_mode=ParseMode.HTML)
+                            print(message)
+                            sent_talons.add(talon_link)
 
 
 asyncio.run(main())
